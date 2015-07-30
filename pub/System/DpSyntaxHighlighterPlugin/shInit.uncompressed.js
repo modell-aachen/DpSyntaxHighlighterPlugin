@@ -150,11 +150,12 @@
       throw("no brush found for language '"+id+"'");
     }
 
-    if (brush.loaded) {
-      callback();
+    if (brush.def) {
+      brush.def.then(callback);
     } else {
-      brush.loaded = true;
-      $.getScript(brush.url, callback);
+      brush.def = jQuery.Deferred();
+      brush.def.then(callback);
+      $.getScript(brush.url, function() { brush.def.resolve(); });
     }
 
   }
